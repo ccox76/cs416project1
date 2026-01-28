@@ -15,6 +15,15 @@ public class switches implements parser{
     }
 
     static void getLink() {
-        
+
+    }
+
+    static String getUserInput(SocketChannel channel) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        int bytesRead = channel.read(buffer);
+        buffer.flip();
+        byte[] byteArray = new byte[bytesRead];
+        buffer.get(byteArray);
+        return new String(byteArray);
     }
 }
