@@ -1,5 +1,3 @@
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -38,4 +36,13 @@ public class hosts implements parser{
             channel.close();
         }
     }
+
+    static void serverOutput(SocketChannel channel) throws IOException {
+       ByteBuffer replyBuffer = ByteBuffer.allocate(1024);
+       int bytesRead = channel.read(replyBuffer);
+       replyBuffer.flip();
+       byte[] a = new byte[bytesRead];
+       replyBuffer.get(a);
+       System.out.println(new String(a));
+   }
 }
