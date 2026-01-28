@@ -8,11 +8,12 @@ import java.util.Scanner;
 public class hosts implements parser{
     public static void main(String[] args) throws Exception{
         //PLACEHOLDER FOR PARSER ARG CHECK
-        int hostID;
+        String hostID = args[0];
 
         //init scanner for reading message
         Scanner keyboard = new Scanner(System.in);
         
+
         String msg;
 
         //await input from user, kill when command entered
