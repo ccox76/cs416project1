@@ -7,10 +7,10 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
-public class client implements parser{
+public class hosts implements parser{
     public static void main(String[] args) throws Exception{
         //PLACEHOLDER FOR PARSER ARG CHECK
-        int clientID;
+        int hostID;
 
         //init scanner for reading message
         Scanner keyboard = new Scanner(System.in);
