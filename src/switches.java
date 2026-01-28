@@ -9,4 +9,12 @@ public class switches implements parser{
     public static void main(String[] args) throws Exception{
         
     }
+
+    static void printCache() throws IOException{
+
+    }
+
+    static void getLink() {
+        
+    }
 }
