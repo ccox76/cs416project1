@@ -13,18 +13,27 @@ public class hosts implements parser{
         //init scanner for reading message
         Scanner keyboard = new Scanner(System.in);
         
-
+        //message pre buffer
         String msg;
 
-        //await input from user, kill when command entered
+        //subject to change, bool to check if message is being sent
+        boolean sending;
+
+        //boolean for process kill
+        boolean close = false;
+
+        //main loop
         while (true) {
+            //listen loop
             do { 
-              //TAKE MESSAGES HERE, CHECK FOR PROPER SYNTAX IN WHILE
-            } while ();
+              System.out.println("Enter message ({Sender ID};{Recipient ID};{Message})");
+              //TODO: add syntax check
+              msg = keyboard.nextLine();
+            } while (!sending);
             //open channel
             SocketChannel channel = SocketChannel.open();
 
-            //PLACEHOLDER FOR PARSER TO GET SWITCH ADDR
+            //TODO: get connection address from config via parser
             channel.connect(new InetSocketAddress());
 
             //message buffer
@@ -34,7 +43,10 @@ public class hosts implements parser{
 
             //AWAIT REPONSE
 
-            channel.close();
+            //kill when we flip close
+            if (close) {
+                channel.close();
+            }
         }
     }
 
