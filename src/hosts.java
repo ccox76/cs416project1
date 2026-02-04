@@ -17,7 +17,7 @@ public class hosts implements parser{
         String msg;
 
         //subject to change, bool to check if message is being sent
-        boolean sending;
+        boolean message;
 
         //boolean for process kill
         boolean close = false;
@@ -29,19 +29,22 @@ public class hosts implements parser{
               System.out.println("Enter message ({Sender ID};{Recipient ID};{Message})");
               //TODO: add syntax check
               msg = keyboard.nextLine();
-            } while (!sending);
+            } while (message);
             //open channel
             SocketChannel channel = SocketChannel.open();
 
             //TODO: get connection address from config via parser
-            channel.connect(new InetSocketAddress());
+            channel.connect();
 
             //message buffer
             ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
 
             channel.write(buffer);
 
-            //AWAIT REPONSE
+            //wait loop; exit when channel recieves message
+            do {
+
+            } while (!message);
 
             //kill when we flip close
             if (close) {
@@ -49,13 +52,4 @@ public class hosts implements parser{
             }
         }
     }
-
-    static void serverOutput(SocketChannel channel) throws IOException {
-       ByteBuffer replyBuffer = ByteBuffer.allocate(1024);
-       int bytesRead = channel.read(replyBuffer);
-       replyBuffer.flip();
-       byte[] a = new byte[bytesRead];
-       replyBuffer.get(a);
-       System.out.println(new String(a));
-   }
 }
