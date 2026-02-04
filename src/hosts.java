@@ -10,7 +10,6 @@ public class hosts implements parser{
         //machine ID specified at boot
         String hostID = args[0];
 
-        //init scanner for reading message
         Scanner keyboard = new Scanner(System.in);
         
         //message pre buffer

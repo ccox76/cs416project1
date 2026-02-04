@@ -25,7 +25,7 @@ public class switches implements parser{
     }
 
     static void getLink() {
-
+        
     }
 
     static String getUserInput(SocketChannel channel) throws IOException {
