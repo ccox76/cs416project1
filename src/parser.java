@@ -45,7 +45,7 @@ public interface parser {
                     idHash.put("IP", str+1);
                     idHash.put("Port", str+2);
                 } else {
-                    idHash.put("Links", str+1);
+                    idHash.put("Links", str+1);//needs tweaking
                 }
             }
         }
