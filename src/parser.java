@@ -38,7 +38,17 @@ public interface parser {
         }
         HashMap idHash = new HashMap<String, String[]>();
 
-
+        String[] strArr = fileString.split(id+";");
+        for (String str : strArr) {
+            if (str.equals(id)) {
+                if ((str+1).contains(".")) {
+                    idHash.put("IP", str+1);
+                    idHash.put("Port", str+2);
+                } else {
+                    idHash.put("Links", str+1);
+                }
+            }
+        }
             
         return idHash;
     }
