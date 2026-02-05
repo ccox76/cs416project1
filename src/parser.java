@@ -1,7 +1,6 @@
 import java.io.File;
 import java.util.Arrays; //Using to look at tempArray
 
-
 public interface parser {
     //functions: getRouteAndSplitMessage -> Take IDSender, IDRecipient, Message divide by commas and return array
 
