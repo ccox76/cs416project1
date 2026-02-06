@@ -10,8 +10,13 @@ import java.util.Map;
 
 public class switches implements parser {
     private netcode netcode;
-    Map<String, String> switchTable = new HashMap<>();
-    Map<String, String> virtualPorts = new HashMap<>();
+    Map<String, String> switchTable;
+    Map<String, String> virtualPorts;
+
+    public switches() {
+        this.virtualPorts = new HashMap<>();
+        this.switchTable = new HashMap<>();
+    }
 
     private void getData(netcode.Data data) {
         String message = data.message();
@@ -47,8 +52,9 @@ public class switches implements parser {
     }
     public static void main(String[] args) {
         String switchId = args[0];
+        switches sw = new switches();
         try {
-            
+            sw.start(switchId);
         } catch (IOException e) {
             // TODO: handle exception
         }
