@@ -60,10 +60,9 @@ public class hosts implements parser{
     }
     
     public static void main(String[] args) {
-        String hostID = args[0];
-        hosts host = new hosts(hostID);
+        hosts host = new hosts(args[0]);
         try {
-            host.start(hostID);
+            host.start(args[0]);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

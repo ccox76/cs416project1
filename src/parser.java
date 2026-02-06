@@ -21,7 +21,7 @@ public interface parser {
 
     static HashMap<String, String[]> parseConfig(String id) throws IOException {
         //path is hardcoded in, I know I know
-        Path configPath = Paths.get("C:\\Users\\ethan\\Documents\\Github\\cs416project1\\src\\config.txt");
+        Path configPath = Paths.get("src/config.txt");
         String fileString;
         BufferedReader br = new BufferedReader(new FileReader(configPath.toFile()));
         try {
@@ -73,7 +73,7 @@ public interface parser {
     }//end parseConfig
 
     public static void main(String[] args) throws IOException {
-        HashMap<String, String[]> result = parseConfig("B");
+        HashMap<String, String[]> result = parseConfig("S2");
         for (String key : result.keySet()) {
             System.out.println(key + " = " + Arrays.toString(result.get(key)));
         }
