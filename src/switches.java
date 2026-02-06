@@ -50,7 +50,7 @@ public class switches implements parser {
         try {
             sw.start(switchId);
         } catch (IOException e) {
-            // TODO: handle exception
+            System.err.println("Failed to start");
         }
     }
 }
