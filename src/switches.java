@@ -15,6 +15,13 @@ public class switches implements parser {
     Map<String, String> switchTable = new HashMap<>();
     Map<String, String> virtualPorts = new HashMap<>();
 
+    private void getData(netcode.Data data) {
+        String message = data.message();
+        String sender = data.sender();
+        int senderPort = data.senderPort();
+        String[] sMessage = parser.getRouteFromMessage(message);
+    }
+    
     private void start(String id) throws IOException {
         HashMap<String, String[]> idHash = parser.parseConfig(id);
 
@@ -23,6 +30,7 @@ public class switches implements parser {
         while (true) {
             try {
                 netcode.Data data = netcode.receive();
+                getData(data);
             } catch (IOException e) {
                 System.err.println("Failed to recieve frame");
             }
