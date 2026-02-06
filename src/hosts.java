@@ -8,14 +8,12 @@ import java.util.Arrays;
 
 public class hosts implements parser{
     private netcode netcode;
-    private final String hostID;
     private final String addr;
     Map<String, String[]> neighbors;
 
     private hosts(String hostID) {
         this.neighbors = new HashMap<>();
         this.addr = hostID;
-        this.hostID = hostID;
     }
     
      private void start(String id) throws IOException {
@@ -48,6 +46,7 @@ public class hosts implements parser{
                 netcode.send(message[2], message[1], Integer.parseInt(neighbors.get(message[1])[1]));
             } catch (IOException e) {
                 System.out.println("Failed to send frame");
+                sc.close();
             }
         }
     }
