@@ -17,7 +17,7 @@ public class switches implements parser {
         String sender = data.sender();
         int senderPort = data.senderPort();
         String[] sMessage = parser.getRouteFromMessage(message);
-        String reciever = sMessage[2];
+        String reciever = sMessage[1];
 
         sendData(message, reciever);
     }
@@ -33,7 +33,7 @@ public class switches implements parser {
     private void start(String id) throws IOException {
         HashMap<String, String[]> idHash = parser.parseConfig(id);
 
-        System.out.println("Switch"+id+"initialized @"+idHash.get("IP")+idHash.get("Port"));
+        System.out.println("Switch "+id+"initialized @"+idHash.get("IP")+idHash.get("Port"));
 
         while (true) {
             try {
