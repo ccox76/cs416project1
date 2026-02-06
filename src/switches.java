@@ -1,39 +1,30 @@
 import java.io.*;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 
-public class switches implements parser{
-    public static void main(String[] args) throws Exception{
-        ServerSocketChannel listenChannel = ServerSocketChannel.open();
+public class switches implements parser {
+    Map<String, String> switchTable = new HashMap<>();
+    Map<String, String> virtualPorts = new HashMap<>();
 
-        //NEED PORT FOR BINDING
-        listenChannel.bind(new InetSocketAddress());
+    private void start(String id) throws IOException {
+        HashMap<String, String[]> idHash = parser.parseConfig(id);
 
-        //main while loop
-        while (true) {
-            SocketChannel serveChannel = listenChannel.accept();
+        DatagramSocket socket = new DatagramSocket((int)idHash.get("Port"));
+
+        System.out.println("Switch"+id+"initialized @"+idHash.get("IP")+idHash.get("Port"));
+    }
+    public static void main(String[] args) {
+        String switchId = args[0];
+        try {
             
-            String hostMessage = getUserInput(serveChannel);
+        } catch (IOException e) {
+            // TODO: handle exception
         }
-    }
-
-    static void printCache() throws IOException{
-
-    }
-
-    static void getLink() {
-        
-    }
-
-    static String getUserInput(SocketChannel channel) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        int bytesRead = channel.read(buffer);
-        buffer.flip();
-        byte[] byteArray = new byte[bytesRead];
-        buffer.get(byteArray);
-        return new String(byteArray);
     }
 }
