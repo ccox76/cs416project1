@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class switches implements parser {
     private void start(String id) throws IOException {
         HashMap<String, String[]> idHash = parser.parseConfig(id);
 
-        System.out.println("Switch "+id+"initialized @"+idHash.get("IP")+idHash.get("Port"));
+        System.out.println("Swtich "+id+" initialized @"+ Arrays.toString(idHash.get("IP")) + Arrays.toString(idHash.get("Port")));
 
         while (true) {
             try {

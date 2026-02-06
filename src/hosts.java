@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.Arrays;
 
 public class hosts implements parser{
     private netcode netcode;
@@ -17,7 +18,7 @@ public class hosts implements parser{
      private void start(String id) throws IOException {
         HashMap<String, String[]> idHash = parser.parseConfig(id);
 
-        System.out.println("Host "+id+"initialized @"+idHash.get("IP")+idHash.get("Port"));
+        System.out.println("Host "+id+" initialized @"+ Arrays.toString(idHash.get("IP")) + Arrays.toString(idHash.get("Port")));
         try (ExecutorService ex = Executors.newFixedThreadPool(2)) {
             ex.submit(this::send);
             ex.submit(this::receive);
@@ -27,7 +28,7 @@ public class hosts implements parser{
     private void send() {
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}");
+            System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}: ");
             String msg = sc.nextLine();
 
             try {
