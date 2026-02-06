@@ -1,0 +1,59 @@
+{
+  "hosts": [
+    {
+    "_comment": "Host A",
+    "ID": "A",
+    "Port": 3401,
+    "IP_Ad": "192.168.1.11"
+    },
+    {
+      "_comment": "Host B",
+      "ID": "B",
+      "Port": 3402,
+      "IP_Ad": "192.168.1.12"
+    },
+    {
+      "_comment": "Host C",
+      "ID": "C",
+      "Port": 3403,
+      "IP_Ad": "192.168.1.13"
+    },
+    {
+      "_comment": "Host D",
+      "ID": "D",
+      "Port": 3404,
+      "IP_Ad": "192.168.1.14"
+    }
+  ],
+  "switches": [
+    {
+      "_comment": "Switch 1",
+      "ID": "S1",
+      "Port": 4501,
+      "IP_Ad": "192.168.1.1"
+    },
+    {
+      "_comment": "Switch 2",
+      "ID": "S2",
+      "Port": 4502,
+      "IP_Ad": "192.168.1.2"
+    },
+    {
+      "_comment": "Switch 3",
+      "ID": "S3",
+      "Port": 4503,
+      "IP_Ad": "192.168.1.3"
+    }
+  ],
+  "connections": [
+    {
+      "A": ["S1"],
+      "B": ["S1"],
+      "C": ["S3"],
+      "D": ["S3"],
+      "S1": ["A","B","S2"],
+      "S2": ["S1","S3"],
+      "S3": ["S2","C","D"]
+    }
+  ]
+}
