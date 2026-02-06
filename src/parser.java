@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.Arrays; 
 import java.util.HashMap;
 
-public interface parser {
+public class parser {
     //functions: getRouteAndSplitMessage -> Take IDSender, IDRecipient, Message divide by commas and return array
     static String[] getRouteFromMessage(String message){
         String[] tempArray = message.split(",");

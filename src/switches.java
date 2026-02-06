@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class switches implements parser {
+public class switches {
     private netcode netcode;
     Map<String, String> switchTable;//key: virtual addr [ip+port]
     Map<String, String[]> virtualPorts; //key: Link name value: List [ip][port]
