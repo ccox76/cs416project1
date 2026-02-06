@@ -1,49 +1,90 @@
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.Arrays;
 
 public class hosts implements parser{
-    public static void main(String[] args) throws Exception{
-        //machine ID specified at boot
-        String hostID = args[0];
+    private netcode netcode;
+    private final String addr;
+    Map<String, String[]> neighbors;
 
-        //init scanner for reading message
-        Scanner keyboard = new Scanner(System.in);
-        
+    private hosts(String hostID) {
+        this.neighbors = new HashMap<>();
+        this.addr = hostID;
+    }
+    
+     private void start(String id) throws IOException {
+        HashMap<String, String[]> idHash = parser.parseConfig(id);
 
-        String msg;
+        System.out.println("Host "+id+" initialized @"+ Arrays.toString(idHash.get("IP")) + Arrays.toString(idHash.get("Port")));
 
-        //await input from user, kill when command entered
-        while (true) {
-            do { 
-              //TAKE MESSAGES HERE, CHECK FOR PROPER SYNTAX IN WHILE
-            } while ();
-            //open channel
-            SocketChannel channel = SocketChannel.open();
+        HashMap<String, String[]> tempHash;
 
-            //PLACEHOLDER FOR PARSER TO GET SWITCH ADDR
-            channel.connect(new InetSocketAddress());
+        for (String link : idHash.get("Links")) {
+            tempHash = parser.parseConfig(link);
+            String[] list = {tempHash.get("IP")[0], tempHash.get("Port")[0]};
+            neighbors.put(link, list);  
+        }
 
-            //message buffer
-            ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
+        System.out.println("Neighbors Found: "+ neighbors.keySet());
 
-            channel.write(buffer);
+        netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
 
-            //AWAIT REPONSE
-
-            channel.close();
+        try (ExecutorService ex = Executors.newFixedThreadPool(2)) {
+            ex.submit(this::send);
+            ex.submit(this::receive);
         }
     }
 
-    static void serverOutput(SocketChannel channel) throws IOException {
-       ByteBuffer replyBuffer = ByteBuffer.allocate(1024);
-       int bytesRead = channel.read(replyBuffer);
-       replyBuffer.flip();
-       byte[] a = new byte[bytesRead];
-       replyBuffer.get(a);
-       System.out.println(new String(a));
-   }
+    private void send() {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}: \n");
+            String msg = sc.nextLine();
+            String[] message = parser.getRouteFromMessage(msg);
+            System.out.println("Frame created\n");
+
+            try {
+                netcode.send(message[2], (neighbors.get(message[1])).toString(), Integer.parseInt(neighbors.get(message[1])[1]));
+                System.out.println("Frame sent");
+            } catch (IOException e) {
+                System.out.println("Failed to send frame");
+                sc.close();
+            }
+        }
+    }
+
+    private void receive() {
+        while (true) {
+            System.out.println("fget");
+            try {
+                netcode.Data data = netcode.receive();
+                String message = data.message();
+                String sender = data.sender();
+
+                String[] sMessage = parser.getRouteFromMessage(message);
+                String reciever = sMessage[1];
+
+                if (reciever.equals(addr)) {
+                    System.out.println(sender+": "+message);
+                } else {
+                    System.out.println("Flooded message: "+message);
+                }
+            } catch (IOException e) {
+                System.out.println("Switch error");
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        hosts host = new hosts(args[0]);
+        try {
+            host.start(args[0]);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
