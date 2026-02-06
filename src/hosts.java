@@ -1,88 +1,96 @@
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.Arrays;
 
-public class hosts implements parser{
-    private netcode netcode;
-    private final String addr;
-    Map<String, String[]> neighbors;
+public class Host {
+    private final String hostID;
+    private final String MacAdress;
+    private String switchIP;
+    private int switchPort;
 
-    private hosts(String hostID) {
-        this.neighbors = new HashMap<>();
-        this.addr = hostID;
-    }
-    
-     private void start(String id) throws IOException {
-        HashMap<String, String[]> idHash = parser.parseConfig(id);
+    private NetworkLayer networkLayer;
 
-        System.out.println("Host "+id+" initialized @"+ Arrays.toString(idHash.get("IP")) + Arrays.toString(idHash.get("Port")));
-
-        HashMap<String, String[]> tempHash;
-
-        for (String link : idHash.get("Links")) {
-            tempHash = parser.parseConfig(link);
-            String[] list = {tempHash.get("IP")[0], tempHash.get("Port")[0]};
-            neighbors.put(link, list);  
-        }
-
-        System.out.println("Neighbors Found: "+ neighbors.keySet());
-
-        netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
-
-        try (ExecutorService ex = Executors.newFixedThreadPool(2)) {
-            ex.submit(this::send);
-            ex.submit(this::receive);
-        }
+    private Host(String hostID) {
+        this.hostID = hostID;
+        this.MacAdress = hostID;
     }
 
-    private void send() {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}: \n");
-            String msg = sc.nextLine();
-            String[] message = parser.getRouteFromMessage(msg);
-            System.out.println("Frame created\n");
+    @SuppressWarnings("SameParameterValue")
+    private void initialize(String configFile) throws IOException {
 
-            try {
-                netcode.send(message[2], (neighbors.get(message[1])).toString(), Integer.parseInt(neighbors.get(message[1])[1]));
-                System.out.println("Frame sent");
+        //load up config
+        Config config = new Config(configFile);
+        String myIp = config.getIp(hostID);
+        int myPort = config.getPort(hostID);
+
+        String switchId = config.getNeighbors(hostID).getFirst();
+        //grab the config and set up everything
+        switchIP = config.getIp(switchId);
+        switchPort = config.getPort(switchId);
+        networkLayer = new NetworkLayer(myPort);
+        System.out.println("Host " + hostID + " initialized on " +
+                myIp + ":" + myPort);
+
+        try (ExecutorService executor = Executors.newFixedThreadPool(2)) {
+            executor.submit(this::sender);
+            executor.submit(this::receiver);
+        }
+    }
+
+    //sender
+    @SuppressWarnings("InfiniteLoopStatement")
+    private void sender() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) { //tey to send message
+
+
+            System.out.print("Destination MacAdress Address: ");
+            String destMacAdress = scanner.nextLine();
+            System.out.print("Message: ");
+            String message = scanner.nextLine();
+            String frame = MacAdress + ":" + destMacAdress + ":" + message;
+            try {//switch try statement
+                networkLayer.send(frame, switchIP, switchPort);
             } catch (IOException e) {
-                System.out.println("Failed to send frame");
-                sc.close();
+                System.out.println("Host " + hostID + " Failed to send frame");
             }
         }
     }
 
-    private void receive() {
+    //receiver
+    @SuppressWarnings("InfiniteLoopStatement")
+    private void receiver() {
         while (true) {
-            System.out.println("fget");
             try {
-                netcode.Data data = netcode.receive();
-                String message = data.message();
-                String sender = data.sender();
+                NetworkLayer.Data data = networkLayer.receive();
+                String[] parts = data.frame().split(":", 3);
+                if (parts.length < 3){
+                    continue;
+                }
 
-                String[] sMessage = parser.getRouteFromMessage(message);
-                String reciever = sMessage[1];
+                String srcMacAdress = parts[0];
+                String destMacAdress = parts[1];
+                String message = parts[2];
 
-                if (reciever.equals(addr)) {
-                    System.out.println(sender+": "+message);
+                if (destMacAdress.equals(MacAdress)) {
+                    System.out.println("Message from " + srcMacAdress + ": " + message);
                 } else {
-                    System.out.println("Flooded message: "+message);
+                    System.out.println("Debug: MacAdress address mismatch - received " + destMacAdress + "_ own MacAdress: " + MacAdress + ". (Flooded frame)");
                 }
             } catch (IOException e) {
-                System.out.println("Switch error");
+                System.out.println("Receive error");
             }
         }
     }
-    
     public static void main(String[] args) {
-        hosts host = new hosts(args[0]);
+        if (args.length != 1) {
+            System.out.println("Java Host <hostID>");
+            return;
+        }
+        Host host = new Host(args[0]);
         try {
-            host.start(args[0]);
+            host.initialize("config.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
