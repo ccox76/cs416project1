@@ -22,6 +22,7 @@ public class switches implements parser {
 
         if (!switchTable.containsKey(sender)) {
             switchTable.put(sender, (virtualPorts.get(sender)[0]+":"+virtualPorts.get(sender)[1]));
+            printCache();
         }
 
         sendData(fMessage, reciever);
