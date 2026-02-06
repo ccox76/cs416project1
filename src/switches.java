@@ -8,8 +8,6 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
-import netcode.Data;
-
 public class switches implements parser {
     private netcode netcode;
     Map<String, String> switchTable = new HashMap<>();
@@ -23,6 +21,14 @@ public class switches implements parser {
         String reciever = sMessage[2];
 
         sendData(message, reciever);
+    }
+
+    private void sendData(String message, String reciever) {
+        try {
+            netcode.send(message, reciever, virtualPorts.get());
+        } catch (IOException e) {
+            System.err.println("Error sending frame");
+        }
     }
     
     private void start(String id) throws IOException {
