@@ -4,7 +4,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class netcode {
-    private final DatagramSocket socket;
+    private DatagramSocket socket;
+
+    public record Data(String message, String sender, int senderPort) {};
 
     public void send(String message, String reciever, int recieverPort) throws IOException {
         byte[] buffer = message.getBytes();
