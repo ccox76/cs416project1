@@ -23,4 +23,8 @@ public class netcode {
 
          return new Data(message, sender, senderPort);
     }
+
+    public void close() {
+        socket.close();
+    }
 }
