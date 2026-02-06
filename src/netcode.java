@@ -13,5 +13,14 @@ public class netcode {
         socket.send(pckt);
     }
 
-    
+    public Data receive() throws IOException {
+        byte[] buffer = new byte[1024];
+        DatagramPacket pckt = new DatagramPacket(buffer, buffer.length);
+        socket.receive(pckt);
+         String message = new String(pckt.getData(), 0, pckt.getLength());
+         String sender = pckt.getAddress().getHostAddress();
+         int senderPort = pckt.getPort();
+
+         return new Data(message, sender, senderPort);
+    }
 }
