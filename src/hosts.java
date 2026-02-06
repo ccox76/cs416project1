@@ -19,8 +19,8 @@ public class hosts implements parser{
 
         System.out.println("Host "+id+"initialized @"+idHash.get("IP")+idHash.get("Port"));
         try (ExecutorService ex = Executors.newFixedThreadPool(2)) {
-            ex.submit(send);
-            ex.submit(recieve);
+            ex.submit(this::send);
+            ex.submit(this::receive);
         }
     }
 
@@ -60,6 +60,12 @@ public class hosts implements parser{
     }
     
     public static void main(String[] args) {
-    
+        String hostID = args[0];
+        hosts host = new hosts(hostID);
+        try {
+            host.start(hostID);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
