@@ -1,10 +1,4 @@
 import java.io.*;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +24,7 @@ public class switches implements parser {
 
     private void sendData(String message, String reciever) {
         try {
-            netcode.send(message, reciever, virtualPorts.get());
+            netcode.send(message, reciever, 0);
         } catch (IOException e) {
             System.err.println("Error sending frame");
         }
