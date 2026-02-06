@@ -64,16 +64,17 @@ public class switches implements parser {
             virtualPorts.put(link, list);  
         }
 
-        System.out.println("Neighbors Found\n");
+        System.out.println("Neighbors Found: "+ virtualPorts.keySet());
 
-        this.netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
+        netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
 
         while (true) {
             try {
                 netcode.Data data = netcode.receive();
+                System.out.println("fget");
                 getData(data);
             } catch (IOException e) {
-                System.err.println("Failed to recieve frame");
+                System.err.println("Failed to recieve frame: "+e);
             }
         }
     }

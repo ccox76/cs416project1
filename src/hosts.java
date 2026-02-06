@@ -29,7 +29,7 @@ public class hosts implements parser{
             neighbors.put(link, list);  
         }
 
-        System.out.println("Neighbors Found\n");
+        System.out.println("Neighbors Found: "+ neighbors.keySet());
 
         netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
 
@@ -59,6 +59,7 @@ public class hosts implements parser{
 
     private void receive() {
         while (true) {
+            System.out.println("fget");
             try {
                 netcode.Data data = netcode.receive();
                 String message = data.message();

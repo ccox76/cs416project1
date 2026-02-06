@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -37,7 +36,7 @@ public interface parser {
         } finally {
             br.close();
         }
-        HashMap idHash = new HashMap<String, String[]>();
+        HashMap<String, String[]> idHash = new HashMap<String, String[]>();
 
         String[] lines = fileString.split(System.lineSeparator());
 

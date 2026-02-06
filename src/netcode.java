@@ -18,6 +18,7 @@ public class netcode {
         InetAddress addr = InetAddress.getByName(reciever);
         DatagramPacket pckt = new DatagramPacket(buffer, buffer.length, addr, recieverPort);
         socket.send(pckt);
+        System.out.println("psend");
     }
 
     public Data receive() throws IOException {
@@ -27,6 +28,8 @@ public class netcode {
         String message = new String(pckt.getData(), 0, pckt.getLength());
         String sender = pckt.getAddress().getHostAddress();
         int senderPort = pckt.getPort();
+
+        System.out.println("pget");
 
         return new Data(message, sender, senderPort);
     }
