@@ -5,6 +5,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
+/*
 public class hosts implements parser{
     public static void main(String[] args) throws Exception{
         //machine ID specified at boot
@@ -52,3 +53,4 @@ public class hosts implements parser{
         }
     }
 }
+ */
