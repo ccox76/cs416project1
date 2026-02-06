@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 public class netcode {
-    private DatagramSocket socket;
+    private final DatagramSocket socket;
 
     public record Data(String message, String sender, int senderPort) {};
 

@@ -25,6 +25,8 @@ public class switches implements parser {
             printCache();
         }
 
+        System.out.println("Frame recieved\n");
+
         sendData(fMessage, reciever);
     }
 
@@ -62,9 +64,12 @@ public class switches implements parser {
             virtualPorts.put(link, list);  
         }
 
+        System.out.println("Neighbors Found\n");
+
+        this.netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
+
         while (true) {
             try {
-                this.netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
                 netcode.Data data = netcode.receive();
                 getData(data);
             } catch (IOException e) {

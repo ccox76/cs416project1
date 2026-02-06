@@ -29,6 +29,10 @@ public class hosts implements parser{
             neighbors.put(link, list);  
         }
 
+        System.out.println("Neighbors Found\n");
+
+        netcode = new netcode(Integer.parseInt(idHash.get("Port")[0]));
+
         try (ExecutorService ex = Executors.newFixedThreadPool(2)) {
             ex.submit(this::send);
             ex.submit(this::receive);
@@ -38,12 +42,14 @@ public class hosts implements parser{
     private void send() {
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}: ");
+            System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}: \n");
             String msg = sc.nextLine();
             String[] message = parser.getRouteFromMessage(msg);
+            System.out.println("Frame created\n");
 
             try {
-                netcode.send(message[2], message[1], Integer.parseInt(neighbors.get(message[1])[1]));
+                netcode.send(message[2], (neighbors.get(message[1])).toString(), Integer.parseInt(neighbors.get(message[1])[1]));
+                System.out.println("Frame sent");
             } catch (IOException e) {
                 System.out.println("Failed to send frame");
                 sc.close();
