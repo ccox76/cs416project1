@@ -5,12 +5,40 @@ import java.util.Map;
 
 public class switches {
     private netcode netcode;
-    Map<String, String> switchTable;//key: virtual addr [ip+port]
+    private final String switchID;
+    private String IP;
+    private int port;
+    Map<String, Port> switchTable;//key: virtual addr [ip+port]
     Map<String, String[]> virtualPorts; //key: Link name value: List [ip][port]
 
     public switches() {
         this.virtualPorts = new HashMap<>();
         this.switchTable = new HashMap<>();
+    }
+
+    private static class Port {
+        String IP;
+        int port;
+
+        Port(String ip, int port) {
+            this.IP = ip;
+            this.port = port;
+        }
+
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            Port port = (Port) obj;
+            return port == port.port && ip.equals(port.IP);
+        }
+
+        public int hashCode() {
+            return ip.hashCode() * 31 + port;
+        }
     }
 
     private void getData(netcode.Data data) {
