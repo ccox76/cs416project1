@@ -20,6 +20,9 @@ public class switches implements parser {
         String sender = data.sender();
         int senderPort = data.senderPort();
         String[] sMessage = parser.getRouteFromMessage(message);
+        String reciever = sMessage[2];
+
+        sendData(message, reciever);
     }
     
     private void start(String id) throws IOException {
