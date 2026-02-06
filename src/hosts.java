@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,16 +10,27 @@ public class hosts implements parser{
     private netcode netcode;
     private final String hostID;
     private final String addr;
+    Map<String, String[]> neighbors;
 
     private hosts(String hostID) {
-    this.addr = hostID;
-    this.hostID = hostID;
+        this.neighbors = new HashMap<>();
+        this.addr = hostID;
+        this.hostID = hostID;
     }
     
      private void start(String id) throws IOException {
         HashMap<String, String[]> idHash = parser.parseConfig(id);
 
         System.out.println("Host "+id+" initialized @"+ Arrays.toString(idHash.get("IP")) + Arrays.toString(idHash.get("Port")));
+
+        HashMap<String, String[]> tempHash;
+
+        for (String link : idHash.get("Links")) {
+            tempHash = parser.parseConfig(link);
+            String[] list = {tempHash.get("IP")[0], tempHash.get("Port")[0]};
+            neighbors.put(link, list);  
+        }
+
         try (ExecutorService ex = Executors.newFixedThreadPool(2)) {
             ex.submit(this::send);
             ex.submit(this::receive);
@@ -30,9 +42,10 @@ public class hosts implements parser{
         while (true) {
             System.out.println("Enter Message: {Sender ID},{Reciever ID},{Message}: ");
             String msg = sc.nextLine();
+            String[] message = parser.getRouteFromMessage(msg);
 
             try {
-                netcode.send(msg, msg, 0);
+                netcode.send(message[2], message[1], Integer.parseInt(neighbors.get(message[1])[1]));
             } catch (IOException e) {
                 System.out.println("Failed to send frame");
             }
