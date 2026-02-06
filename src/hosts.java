@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -7,28 +9,39 @@ public class Host {
     private final String hostID;
     private final String MacAdress;
     private String switchIP;
+    Map<String, String[]> neighbors;
     private int switchPort;
+    private netcode netcode;
 
-    private NetworkLayer networkLayer;
 
     private Host(String hostID) {
         this.hostID = hostID;
         this.MacAdress = hostID;
+        this.neighbors = new HashMap<>();
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void initialize(String configFile) throws IOException {
+    private void initialize(String configFile, String id) throws IOException {
 
         //load up config
-        Config config = new Config(configFile);
-        String myIp = config.getIp(hostID);
-        int myPort = config.getPort(hostID);
+        parser parse = new parser();
+        HashMap<String, String[]> parsedHashMap = parser.parseConfig(id);
+        String myIp = parsedHashMap.get("IP")[0];
+        int myPort = Integer.parseInt(parsedHashMap.get("Port")[0]);
 
-        String switchId = config.getNeighbors(hostID).getFirst();
+
+        HashMap<String, String[]> tempHash;
+
+        for (String link : parsedHashMap.get("Links")) {
+            tempHash = parse.parseConfig(link);
+            String[] list = {tempHash.get("IP")[0], tempHash.get("Port")[0]};
+            neighbors.put(link, list);
+        }
+        String switchId = neighbors.get();
         //grab the config and set up everything
-        switchIP = config.getIp(switchId);
-        switchPort = config.getPort(switchId);
-        networkLayer = new NetworkLayer(myPort);
+        switchIP = neighbors.get(switchId)[0];
+        switchPort = Integer.parseInt(neighbors.get(switchId)[1]);
+        netcode = new netcode(myPort);
         System.out.println("Host " + hostID + " initialized on " +
                 myIp + ":" + myPort);
 
@@ -90,7 +103,7 @@ public class Host {
         }
         Host host = new Host(args[0]);
         try {
-            host.initialize("config.json");
+            host.initialize("config.json", args[0]);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
