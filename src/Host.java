@@ -37,7 +37,7 @@ public class Host {
             String[] list = {tempHash.get("IP")[0], tempHash.get("Port")[0]};
             neighbors.put(link, list);
         }
-        String switchId = neighbors.get();
+        String switchId = neighbors.get(); //TODO: pull neighboring switch ID from hash
         //grab the config and set up everything
         switchIP = neighbors.get(switchId)[0];
         switchPort = Integer.parseInt(neighbors.get(switchId)[1]);
@@ -64,7 +64,7 @@ public class Host {
             String message = scanner.nextLine();
             String frame = MacAdress + ":" + destMacAdress + ":" + message;
             try {//switch try statement
-                networkLayer.send(frame, switchIP, switchPort);
+                netcode.send(frame, switchIP, switchPort);
             } catch (IOException e) {
                 System.out.println("Host " + hostID + " Failed to send frame");
             }
@@ -75,9 +75,9 @@ public class Host {
     @SuppressWarnings("InfiniteLoopStatement")
     private void receiver() {
         while (true) {
-            try {
-                NetworkLayer.Data data = networkLayer.receive();
-                String[] parts = data.frame().split(":", 3);
+            try { //TODO: format for input 
+                netcode.Data data = netcode.receive();
+                String[] parts = data.Data().split(",", 3);
                 if (parts.length < 3){
                     continue;
                 }
