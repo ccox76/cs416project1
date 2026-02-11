@@ -74,7 +74,7 @@ public class switches {
 
     private void printCache() {
         System.out.println("Cache:");
-        for (Map.Entry<String, String> element : switchTable.entrySet()) {
+        for (Map.Entry<String, Port> element : switchTable.entrySet()) {
             System.out.println(switchTable.get(element));
         }
     }
